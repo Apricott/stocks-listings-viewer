@@ -4,13 +4,43 @@ from tkinter import *
 
 class Navbar(tk.Frame):
     def __init__(self, master=None):
-        tk.Frame.__init__(self)
+        super(Navbar, self).__init__()
 
         self.master = master
 
-        self.master = tk.Frame(self, height=500, bg="blue")
+        self.master = tk.Frame(master, bg="green", width=200, height=500)
+        self.master.grid(row=0, column=0, rowspan=2, sticky=W)
 
-        self.label = tk.Label(master, text="Ustawienia wykresu")
+        self.label = tk.Label(master, text="Settings")
+        self.label.grid(master, row=0, column=0, columnspan=1, sticky=N)
+
+
+class MainPlot(tk.Frame):
+    def __init__(self, master=None):
+        super(MainPlot, self).__init__()
+
+        self.master = master
+
+        self.master = tk.Frame(master, bg="red", width=800, height=350)
+        self.master.grid(row=0, column=1, sticky=NE)
+
+        self.label = tk.Label(master, text="Tu ma być wykres")
+        self.label.grid(master, row=0, rowspan=1, column=1, sticky=N)
+
+
+class PlotSpecs(tk.Frame):
+    def __init__(self, master=None):
+        super(PlotSpecs, self).__init__()
+
+        self.master = master
+
+        self.master = tk.Frame(master, bg="blue", width=800, height=150)
+        self.master.grid(row=1, column=1, sticky=SE)
+
+        self.label = tk.Label(master, text="Tu ma być opis wykresu")
+        self.label.grid(master, row=1, rowspan=1, column=1, sticky=N)
+
+
 
 
 class MainWindow(tk.Frame):
@@ -21,12 +51,11 @@ class MainWindow(tk.Frame):
         self.master.minsize(1000, 500)
 
         self.master = master
-        """master.title("A simple GUI")
+        master.title("A simple GUI")
 
+        self.label = tk.Label(master, text="DataFrame")
 
-        self.label = tk.Label(master, text="This is our first GUI!")
-
-        self.greet_button = tk.Button(master, text="Greet", command=self.greet)
+        """self.greet_button = tk.Button(master, text="Greet", command=self.greet)
 
         self.close_button = tk.Button(master, text="Close", command=master.quit)
 
@@ -35,6 +64,9 @@ class MainWindow(tk.Frame):
         self.close_button.grid(row=5, column=1)"""
 
         self.navbar = Navbar()
+        self.mainplot = MainPlot()
+        self.plotspecs = PlotSpecs()
+
 
     def greet(self):
         print("Greetings!")
