@@ -6,6 +6,8 @@ from tkinter import *
 import matplotlib
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from matplotlib.figure import Figure
+
+
 matplotlib.use("TkAgg")
 
 
@@ -24,8 +26,8 @@ class Navbar(tk.Frame):
         self.label = tk.Label(master, width =28, text="Settings")
         self.label.grid(master, row=0, column=0, sticky=NW)
 
-        self.label = tk.Label(master, width=10, text="Select File")
-        self.label.grid(master, row=0, column=0)
+        self.button = tk.Button(master, width=10, text="Select File")
+        self.button.grid(master, row=1, column=0)
 
 
 class MainPlot(tk.Frame):
@@ -51,12 +53,18 @@ class MainPlot(tk.Frame):
         a.plot(notowania['close'])
 
         canvas = FigureCanvasTkAgg(fig, master=self.master)
-        canvas.get_tk_widget().grid(row=0, column=1)
+        canvas.get_tk_widget().grid(row=1, column=1)
         canvas.draw()
 
-        toolbar = NavigationToolbar2Tk(canvas,self)
+        toolbar_frame = Frame(master=root)
+        toolbar_frame.grid(row=0, column=3, columnspan=4, sticky=NW)
+        toolbar = NavigationToolbar2Tk(canvas, toolbar_frame)
         toolbar.update()
-        canvas._tkcanvas.grid(row=0, column=1)
+        canvas._tkcanvas.grid(row=1, column=1, sticky=S)
+
+        """toolbar = NavigationToolbar2Tk(canvas, self)
+        toolbar.update()
+        canvas._tkcanvas.grid(row=1, column=1)"""
 
 
 class PlotSpecs(tk.Frame):

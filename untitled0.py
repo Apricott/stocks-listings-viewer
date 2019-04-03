@@ -11,6 +11,8 @@ class Data_Frame():
         exchange_listing.index.name = 'time'
         exchange_listing['growth'] = exchange_listing['close'] / exchange_listing['close'].shift(1)
 
+        close = exchange_listing['close']
+
         print(exchange_listing['close']['2018'].mean())
 
         print(exchange_listing['close']['2018'].min())
