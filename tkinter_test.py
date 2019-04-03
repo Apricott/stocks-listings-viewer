@@ -1,9 +1,12 @@
 import tkinter as tk
 import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
 from tkinter import *
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from matplotlib.figure import Figure
-from untitled0 import plot
+matplotlib.use("TkAgg")
 
 
 class Navbar(tk.Frame):
@@ -21,41 +24,8 @@ class Navbar(tk.Frame):
         self.label = tk.Label(master, width =28, text="Settings")
         self.label.grid(master, row=0, column=0, sticky=NW)
 
-        self.label = tk.Label(master, width=8, text="Przeglądaj")
-        self.label.grid(master, row=0, column=0, sticky=W)
-
-        self.button = Button (master, text="Show Plot", command=MainPlot.showplot)
-        self.button.grid(row= 3,column=0)
-
-
-
-class mclass:
-    def __init__(self, master=None):
-        self.master = master
-        self.box = Entry(master)
-        self.button = Button (master, text="check", command=MainPlot.plot)
-        self.box.grid()
-        self.button.grid()
-
-    def plot(self):
-        x=np.array ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-        v= np.array ([16,16.31925,17.6394,16.003,17.2861,17.3131,19.1259,18.9694,22.0003,22.81226])
-        p= np.array ([16.23697,     17.31653,     17.22094,     17.68631,     17.73641 ,    18.6368,
-            19.32125,     19.31756 ,    21.20247  ,   22.41444   ,  22.11718  ,   22.12453])
-
-        fig = Figure(figsize=(6,6))
-        a = fig.add_subplot(111)
-        a.scatter(v,x,color='red')
-        a.plot(p, range(2 +max(x)),color='blue')
-        a.invert_yaxis()
-
-        a.set_title ("Estimation Grid", fontsize=16)
-        a.set_ylabel("Y", fontsize=14)
-        a.set_xlabel("X", fontsize=14)
-
-        canvas = FigureCanvasTkAgg(fig, master=self.master)
-        canvas.get_tk_widget().pack()
-        canvas.draw()
+        self.label = tk.Label(master, width=10, text="Select File")
+        self.label.grid(master, row=0, column=0)
 
 
 class MainPlot(tk.Frame):
@@ -64,62 +34,29 @@ class MainPlot(tk.Frame):
 
         self.master = master
 
-        self.master = tk.Frame(master, bg="aquamarine", width=800, height=350)
+        self.master = tk.Frame(master, bg="white", width=800, height=350)
         self.master.grid(row=0, rowspan=5, column=1, columnspan=8, sticky=NE)
 
-    def showplot(self):
+        self.button = Button(master, text="Show Plot", command=self.plot)
+        self.button.grid(row=6, column=0)
 
-        canvas = FigureCanvasTkAgg(plot(), master=self.master)
-        canvas.get_tk_widget().grid(column=1, row=1)
-        canvas.draw()
+    def plot (self):
+        notowania = pd.read_csv('tsla_us_d.csv', index_col=0, parse_dates=True)
+        notowania.columns = ['open', 'high', 'low', 'close', 'volume']
+        notowania.index.name = 'time'
+        notowania['wzrost'] = notowania['close'] / notowania['close'].shift(1)
 
-    """def plot (self):
-        x=np.array ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-        v= np.array ([16,16.31925,17.6394,16.003,17.2861,17.3131,19.1259,18.9694,22.0003,22.81226])
-        p= np.array ([16.23697,     17.31653,     17.22094,     17.68631,     17.73641 ,    18.6368,
-            19.32125,     19.31756 ,    21.20247  ,   22.41444   ,  22.11718  ,   22.12453])
-
-        fig = Figure(figsize=(6,3))
+        fig = Figure(figsize=(8, 3.5))
         a = fig.add_subplot(111)
-        a.scatter(v, x, color='red')
-        a.plot(p, range(2+max(x)),color='blue')
-        a.invert_yaxis()
-
-        a.set_title ("Estimation Grid", fontsize=16)
-        a.set_ylabel("Y", fontsize=14)
-        a.set_xlabel("X", fontsize=14)
+        a.plot(notowania['close'])
 
         canvas = FigureCanvasTkAgg(fig, master=self.master)
-        canvas.get_tk_widget().grid()
-        canvas.draw()"""
+        canvas.get_tk_widget().grid(row=0, column=1)
+        canvas.draw()
 
-    """self.box = Entry(master)
-        self.button = Button (master, text="check", command=self.plot)
-        self.box.grid()
-        self.button.grid()
-
-        #self.label = tk.Label(master, text="Tu ma być wykres")
-        #self.label.grid(master, row=0, rowspan=1, column=1, sticky=NW)
-
-        def plot (self):
-            x=np.array ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-            v= np.array ([16,16.31925,17.6394,16.003,17.2861,17.3131,19.1259,18.9694,22.0003,22.81226])
-            p= np.array ([16.23697,     17.31653,     17.22094,     17.68631,     17.73641 ,    18.6368,
-                19.32125,     19.31756 ,    21.20247  ,   22.41444   ,  22.11718  ,   22.12453])
-
-            fig = Figure(figsize=(6,6))
-            a = fig.add_subplot(111)
-            a.scatter(v,x,color='red')
-            a.plot(p, range(2 +max(x)),color='blue')
-            a.invert_yaxis()
-
-            a.set_title ("Estimation Grid", fontsize=16)
-            a.set_ylabel("Y", fontsize=14)
-            a.set_xlabel("X", fontsize=14)
-
-            canvas = FigureCanvasTkAgg(fig, master=self.window)
-            canvas.get_tk_widget().grid()
-            canvas.draw()"""
+        toolbar = NavigationToolbar2Tk(canvas,self)
+        toolbar.update()
+        canvas._tkcanvas.grid(row=0, column=1)
 
 
 class PlotSpecs(tk.Frame):
@@ -128,7 +65,7 @@ class PlotSpecs(tk.Frame):
 
         self.master = master
 
-        self.master = tk.Frame(master, bg="white", width=800, height=150)
+        self.master = tk.Frame(master, bg="gray", width=800, height=150)
         self.master.grid(row=1, rowspan=10, column=1, columnspan=8, sticky=SE)
 
         #self.label = tk.Label(master, text="Tu ma być opis wykresu")
@@ -184,10 +121,10 @@ class MainWindow(tk.Frame):
         self.mainplot = MainPlot()
         self.plotspecs = PlotSpecs()
 
-        #self.test = mclass()
 
-        # def greet(self):
-        # print("Greetings!")
+
+    """def greet(self):
+        print("Greetings!")"""
 
 
 root = Tk()
