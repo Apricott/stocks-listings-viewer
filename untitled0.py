@@ -13,6 +13,8 @@ class Data_Frame():
 
         close = exchange_listing['close']
 
+        exchange_listing['close'].plot()
+
         print(exchange_listing['close']['2018'].mean())
 
         print(exchange_listing['close']['2018'].min())
@@ -22,6 +24,8 @@ class Data_Frame():
         #prints mean of every year
         yearly_mean = exchange_listing['close'].resample('A').mean()
         print(yearly_mean)
+
+        plt.show(block=True)
 
 
 """print (notowania['2018'].head())

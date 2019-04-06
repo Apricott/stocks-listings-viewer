@@ -27,30 +27,51 @@ class Navbar(tk.Frame):
         self.button = tk.Button(master, width=10, text="Select File")
         self.button.grid(master, row=1, column=0)
 
-        self.button = Button(master, text="Show Plot", command= lambda: show_plot())
+        self.label = tk.Label(master, width=10, text="Date from:")
+        self.label.grid(row=14, column=0)
+
+        entry1_var = StringVar()
+        self.entry = tk.Entry(master, width=20, textvariable=entry1_var)
+        self.entry.grid(master, column=0, row=15)
+
+        self.label = tk.Label(master, width=10, text="Date to:")
+        self.label.grid(row=16, column=0)
+
+        entry2_var = StringVar()
+        self.entry = tk.Entry(master, width=20, textvariable=entry2_var)
+        self.entry.grid(master, row=17, column=0)
+
+        self.button = Button(master, text="Show Plot", command=lambda: show_plot())
         self.button.grid(row=19, column=0)
 
-        var = StringVar()
-        r1 = Radiobutton(master, text="close", variable=var, value="close", width=10, command=lambda: plot_customization())
+        radio_var = StringVar()
+        r1 = Radiobutton(master, text="close", variable=radio_var, value="close", width=10, command=lambda: plot_customization())
         r1.grid(column=0, row=4)
-        r2 = Radiobutton(master, text="open", variable=var, value="open", width=10, command=lambda: plot_customization())
+        r2 = Radiobutton(master, text="open", variable=radio_var, value="open", width=10, command=lambda: plot_customization())
         r2.grid(column=0, row=5)
-        r3 = Radiobutton(master, text="high", variable=var, value="high", width=10, command=lambda: plot_customization())
+        r3 = Radiobutton(master, text="high", variable=radio_var, value="high", width=10, command=lambda: plot_customization())
         r3.grid(column=0, row=6)
-        r2 = Radiobutton(master, text="low", variable=var, value="low", width=10, command=lambda: plot_customization())
+        r2 = Radiobutton(master, text="low", variable=radio_var, value="low", width=10, command=lambda: plot_customization())
         r2.grid(column=0, row=7)
-        r3 = Radiobutton(master, text="volume", variable=var, value="volume", width=10, command=lambda: plot_customization())
+        r3 = Radiobutton(master, text="volume", variable=radio_var, value="volume", width=10, command=lambda: plot_customization())
         r3.grid(column=0, row=8)
+        r3 = Radiobutton(master, text="growth", variable=radio_var, value="growth", width=10, command=lambda: plot_customization())
+        r3.grid(column=0, row=9)
+
+
 
         def plot_customization():
-            arg1 = var.get()
-            return arg1
+            arg1 = radio_var.get()
+            arg2 = entry1_var.get()
+            arg3 = entry2_var.get()
+            return arg1, arg2, arg3
 
         def show_plot():
             data_type = plot_customization()
+
             if data_type:
                 c = MainPlot()
-                MainPlot.plot(c, data_type)
+                MainPlot.plot(c, data_type[0], data_type[1], data_type[2])
 
 
 class MainPlot(tk.Frame):
@@ -62,21 +83,35 @@ class MainPlot(tk.Frame):
         self.master = tk.Frame(master, bg="white", width=800, height=350)
         self.master.grid(row=0, rowspan=19, column=1, columnspan=9, sticky=NE)
 
-    def plot(self, param):
+    def plot(self, *args):
             exchange_listing = pd.read_csv('tsla_us_d.csv', index_col=0, parse_dates=True)
             exchange_listing.columns = ['open', 'high', 'low', 'close', 'volume']
             exchange_listing.index.name = 'time'
-            exchange_listing['wzrost'] = exchange_listing['close'] / exchange_listing['close'].shift(1)
+            exchange_listing['growth'] = exchange_listing['close'] / exchange_listing['close'].shift(1)
 
-            print(param)
+            # placing returned items in the list
+            params = []
+            for ar in args:
+                params.append(ar)
 
-            fig = Figure(figsize=(9, 3.5))
-            a = fig.add_subplot(111)
-            a.plot(exchange_listing[param])
+            # deleting empty elements
+            params = list(filter(None, params))
+
+            print(params[0])
+
+            plot_content = params[0]
 
             fig = Figure(figsize=(8, 3.5))
             a = fig.add_subplot(111)
-            a.plot(exchange_listing[param])
+            if len(params) > 2:
+                date_start = params[1]
+                date_end = params[2]
+                a.plot(exchange_listing[plot_content][date_start:date_end])
+            elif len(params) > 1:
+                date_start = params[1]
+                a.plot(exchange_listing[plot_content][date_start])
+            else:
+                a.plot(exchange_listing[plot_content])
 
             canvas = FigureCanvasTkAgg(fig, master=self.master)
             canvas.get_tk_widget().grid(row=1, column=1)
@@ -116,22 +151,22 @@ class PlotSpecs(tk.Frame):
         self.master = master
 
         self.master = tk.Frame(master, bg="gray", width=800, height=150)
-        self.master.grid(row=17, rowspan=3, column=1, columnspan=9, sticky=SE)
+        self.master.grid(row=15, rowspan=6, column=1, columnspan=9, sticky=SE)
 
         #self.label = tk.Label(master, text="Tu ma być opis wykresu")
         #self.label.grid(master, row=1, rowspan=1, column=1, sticky=NW)
 
         self.text1 = tk.Label(master, height=1, width=6, text="Max")
-        self.text1.grid(master, row=17, column=1)
+        self.text1.grid(master, row=16, column=1)
 
         self.text2 = tk.Label(master, height=1, width=6,  text="Min")
-        self.text2.grid(master, row=18, column=1)
+        self.text2.grid(master, row=17, column=1)
 
         self.text3 = tk.Label(master, height=1, width=6,  text="Mean")
-        self.text3.grid(master, row=19, column=1)
+        self.text3.grid(master, row=18, column=1)
 
         self.text4 = tk.Label(master, height=1, width=6,  text="Trend")
-        self.text4.grid(master, row=19, column=3)
+        self.text4.grid(master, row=18, column=3)
 
 
         #self.button = Button(master, text="Ok")
@@ -156,7 +191,7 @@ class MainWindow(tk.Frame):
         self.master.maxsize(1000, 500)
         self.master.minsize(1000, 500)
 
-        master.title("DataFrame")
+        master.title("Data Frame")
 
 
         self.label = tk.Label(master, text="DataFrame")
