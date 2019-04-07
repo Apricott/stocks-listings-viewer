@@ -48,9 +48,12 @@ class Navbar(tk.Frame):
         self.label = tk.Label(master, width=22, text="Enter ticker symbol below:")
         self.label.grid(master, column=0, row=1)
 
+
         entry_ticker_var = StringVar()
         self.entry = tk.Entry(master, width=10, textvariable=entry_ticker_var)
         self.entry.grid(master, column=0, row=2)
+        self.entry.focus_set()
+        self.entry.bind('<Return>', lambda e: enter(e))
 
         self.label = tk.Label(master, width=10, text="Date from:")
         self.label.grid(master, row=14, column=0)
@@ -66,14 +69,17 @@ class Navbar(tk.Frame):
         self.entry = tk.Entry(master, width=20, textvariable=entry2_var)
         self.entry.grid(master, row=17, column=0)
 
+
         self.button = Button(master, text="Show Plot", command=lambda: show_plot_button())
         self.button.grid(row=19, column=0)
-        self.button.focus_set()
+        self.button.bind('<Return>', lambda e: enter(e))
+
 
 
         radio_var = StringVar()
         r1 = Radiobutton(master, text="close", variable=radio_var, value="close", width=10, command=lambda: plot_customization())
         r1.grid(column=0, row=4)
+        radio_var.set("close")
         r2 = Radiobutton(master, text="open", variable=radio_var, value="open", width=10, command=lambda: plot_customization())
         r2.grid(column=0, row=5)
         r3 = Radiobutton(master, text="high", variable=radio_var, value="high", width=10, command=lambda: plot_customization())
@@ -85,6 +91,8 @@ class Navbar(tk.Frame):
         r6 = Radiobutton(master, text="growth", variable=radio_var, value="growth", width=10, command=lambda: plot_customization())
         r6.grid(column=0, row=9)
 
+        def enter(event):
+            show_plot_button()
 
         def show_plot_button():
             plot_specs = plot_creation()
@@ -98,7 +106,7 @@ class Navbar(tk.Frame):
             arg1 = radio_var.get()
 
             # default plot content if no other specified
-            if arg1 == '':
+            if arg1 == '0':
                 arg1 = 'close'
 
             arg2 = entry1_var.get()
@@ -135,9 +143,8 @@ class MainPlot(tk.Frame):
                 # User pandas_reader.data.DataReader to load the desired data. As simple as that.
                 exchange_listing = data.DataReader(ticker, 'yahoo', start_date)
             except RemoteDataError:
-                messagebox.showerror("Wrong Ticker Symbol", "Could not find a company with the given symbol!")
+                messagebox.showerror("Wrong Ticker Symbol", "Could not find a company with the given symbol! \n (accidental whitespace maybe?)")
             except:
-                print(sys.exc_info())
                 messagebox.showerror("Unknown Error", "Something went wrong!")
                # panel_data.to_csv('panel_data.csv')
 
@@ -173,9 +180,11 @@ class MainPlot(tk.Frame):
                 a.plot(exchange_listing[plot_content])
                 maximum = exchange_listing[plot_content].max()
 
-            #ax.set_xlabel('Date')
-            #ax.set_ylabel('Adjusted closing price ($)')
-
+            if plot_content == 'volume':
+                print(plot_content)
+                a.set_ylabel('Volume')
+            else:
+                a.set_ylabel('Price ($)')
 
             canvas = FigureCanvasTkAgg(fig, master=self.master)
             canvas.get_tk_widget().grid(row=1, column=1)
@@ -234,6 +243,9 @@ class PlotSpecs(tk.Frame):
 
         self.maks = tk.Text(master, height=1, width=10)
         self.maks.grid(row=16, column=2)
+
+        self.text5 = tk.Label(master, height=1, width=42, text="Mean of subsequent years")
+        self.text5.grid(master, row=16, column=5, columnspan=4, sticky=S)
 
 
         #self.button = Button(master, text="Ok")
