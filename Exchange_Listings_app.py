@@ -114,6 +114,7 @@ class Navbar(tk.Frame):
                 specs = (MainPlot.plot(c, data_type[0], data_type[1], data_type[2], data_type[3]))
                 return specs
 
+
 class MainPlot(tk.Frame):
     def __init__(self, master=None):
         super(MainPlot, self).__init__()
@@ -135,7 +136,6 @@ class MainPlot(tk.Frame):
                 messagebox.showerror("Wrong Ticker Symbol", "Could not find a company with the given symbol! \n (check for accidental whitespaces!)")
             except:
                 messagebox.showerror("Unknown Error", "Something went wrong!")
-
 
             exchange_listing.columns = ['high', 'low', 'open', 'close', 'volume', 'adj_close']
             exchange_listing.index.name = 'time'
@@ -160,8 +160,9 @@ class MainPlot(tk.Frame):
 
                 if plot_content != 'growth':
                     timedelta = 90
-                    if len(date_start) >7:
-                        ##extracting right trend freq of 1/10 if more specific date is given
+                    if len(date_start) > 6:
+                        # extracting trend freq of 1/10 of the given time period
+
                         time1 = date_start
                         time2 = date_end
 
@@ -170,7 +171,6 @@ class MainPlot(tk.Frame):
                         timedelta = date_time2 - date_time1
                         timedelta = timedelta.days
                         timedelta = int(round(timedelta/10))
-
 
                     trend_df = exchange_listing[plot_content][date_start:date_end]
                     trend = seasonal_decompose(trend_df, model='additive', freq=timedelta)
@@ -211,7 +211,6 @@ class MainPlot(tk.Frame):
                 mean = exchange_listing[plot_content].mean()
                 mean_yearly = exchange_listing['close'].resample('A').mean()
 
-
             if plot_content == 'volume':
                 a.set_ylabel('Volume')
             else:
@@ -222,11 +221,12 @@ class MainPlot(tk.Frame):
             canvas.draw()
 
             toolbar_frame = Frame(master=root)
-            toolbar_frame.grid(row=0, column=3, columnspan=4, sticky=NW)
+            toolbar_frame.grid(row=0, column=3, columnspan=5, sticky=NW)
             toolbar = NavigationToolbar2Tk(canvas, toolbar_frame)
             toolbar.update()
 
             return maximum, minimum, mean, mean_yearly
+
 
 class PlotSpecs(tk.Frame):
     def __init__(self, master=None):
@@ -267,6 +267,7 @@ class PlotSpecs(tk.Frame):
         self.note.insert(END, "Note \nThe smoother line \nrepresents trend.")
         self.note.config(state=DISABLED)
 
+
 class MainWindow(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
@@ -283,6 +284,7 @@ class MainWindow(tk.Frame):
         self.navbar = Navbar()
         self.mainplot = MainPlot()
         self.plotspecs = PlotSpecs()
+
 
 root = Tk()
 app = MainWindow(root)
