@@ -5,15 +5,14 @@ PL
 
 Program pozwala na wyświetlanie oraz podstawową analizę wykresu przedstawiającego notowania giełdowe wybranej spółki.
 
-Program do działania wymaga zainstalowanych bibliotek dla języka python:
+Program wykorzystuje biblioteki dla języka python:
 -pandas
 -pandas-datareader
 -scipy
 -matplotlib
 -statsmodels
 
-Po uruchomieniu programu użytkownik podaje symbol spółki (ticker symbol) używany przez nią na giełdzie (dla platformy Yahoo Finance, ponieważ
-tam znajduje się baza z danymi, z których kozysta aplikacja). Przykładowe symbole: AAPL - Apple Inc., TSLA - Tesla, Inc.,
+Po uruchomieniu programu użytkownik podaje symbol spółki (ticker symbol) używany przez nią na giełdzie (dla platformy Yahoo Finance, ponieważ tam znajduje się baza z danymi, z których kozysta aplikacja). Przykładowe symbole: AAPL - Apple Inc., TSLA - Tesla, Inc.,
  MSFT - Microsoft Corporation, FB - Facebook, Inc., KGHA.F - KGHM Polska Miedz SA
 
 W kolejnym kroku użytkownik może podać rodzaj danych, ktore mają zostać przedstawione na wykresie:
