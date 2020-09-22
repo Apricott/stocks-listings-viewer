@@ -1,11 +1,10 @@
-# DataFrame
-Python data frame project
+# stocks-listings-viewer
 
 PL
 
 Program pozwala na wyświetlanie oraz podstawową analizę wykresu przedstawiającego notowania giełdowe wybranej spółki.
 
-Program wykorzystuje biblioteki dla języka python:
+Program wykorzystuje następujące biblioteki języka python:
 -pandas
 -pandas-datareader
 -scipy
@@ -29,7 +28,7 @@ Następnie może on wprowadzić datę początku oraz końca okresu, dla którego
  niż 10 lat wstecz). Nie jest to jednak wymagane. W przypadku, w którym uzytkownik nie wprowadzi dat, wyświetlone zostą dane z
 podstawowego okresu 10-ciu lat.
 
-Przyciskiem 'Show Plot' wywołujemy żądany wykres. (Możliwe jest również wywolanie wykresu przyciskiem <Enter>, jeśli pole
+Przyciskiem 'Show Plot' wywołujemy żądany wykres. (Możliwe jest również wywolanie wykresu klawiszem Enter, jeśli pole
 wprowadzania symbolu spółki jest aktywne)
 
 Oprócz samego wykresu wyświetlany jest trend, wartości minimalne i maksymalne oraz średnia całego wykresu oraz kolejnych lat z 
